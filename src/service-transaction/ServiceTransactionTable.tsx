@@ -33,11 +33,11 @@ const ServiceTransactionTable: React.FC<ServiceTransactionTablePropType> = ({
                   <a href={`/service-transaction/${serviceTransaction.id}`} >
                     <Button color="blue">Detail</Button>
                   </a>
-                  <a
-                    target="blank"
-                    href={`/service-transaction/${serviceTransaction.id}/invoice`}
-                  >
+                  <a target="blank" href={`/service-transaction/${serviceTransaction.id}/invoice`} >
                     <Button>Generate PDF</Button>
+                  </a>
+                  <a target="blank" href={`/service-transaction/${serviceTransaction.id}/print-text`} >
+                    <Button>Copy Text</Button>
                   </a>
                 </Stack>
               </Table.Cell>

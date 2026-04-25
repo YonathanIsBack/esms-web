@@ -74,8 +74,6 @@ const ServiceTransactionFormPage = () => {
   };
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    return;
     axios
       .post("http://localhost:3000/service-transaction", {
         customer_id: data.customerId,
