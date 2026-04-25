@@ -10,6 +10,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams, useSearchParams } from "react-router";
+import Constant from "../constant/Constant";
 
 interface FormValues {
   id: string;
@@ -51,7 +52,7 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
     }
 
     axios
-      .get(`http://localhost:3000/customer/${customerName}`)
+      .get(`${Constant.coreUrl}/customer/${customerName}`)
       .then((response) => {
         const { data } = response.data;
         setSearchParams({ action: "EDIT" });
@@ -67,7 +68,7 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
   const onSubmit = handleSubmit((data) => {
     if(action === "ADD") {
       axios
-      .post("http://localhost:3000/customer", {
+      .post(`${Constant.coreUrl}/customer`, {
         customer_name: data.customerName,
         customer_phone: data.customerPhone,
         customer_address: data.customerAddress,
@@ -83,7 +84,7 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
     }
 
     axios
-      .put(`http://localhost:3000/customer/${data.id}`, {
+      .put(`${Constant.coreUrl}/customer/${data.id}`, {
         customer_name: data.customerName,
         customer_phone: data.customerPhone,
         customer_address: data.customerAddress,

@@ -3,13 +3,14 @@ import { Button, Stack, Table } from "@chakra-ui/react";
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router";
+import Constant from "../constant/Constant";
 
 const CustomerTable: React.FC<CustomerListPropType> = ({ customers }) => {
   const navigate = useNavigate();
 
   const deleteUser = (customerId: number) => {
     axios
-      .delete(`http://localhost:3000/customer/${customerId}`)
+      .delete(`${Constant.coreUrl}/customer/${customerId}`)
       .then((response) => {
         window.location.reload();
       });

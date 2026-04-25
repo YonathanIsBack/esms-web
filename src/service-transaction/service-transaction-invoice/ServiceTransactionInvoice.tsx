@@ -17,6 +17,7 @@ import TableHeader from "./TableHeader";
 import TableRows from "./TableRows";
 import TransactionDate from "./TransactionDate";
 import TransactionInformationSection from "./TransactionInformationSection";
+import Constant from "../../constant/Constant";
 
 interface ServiceTransactionInvoicePropType {}
 
@@ -62,7 +63,7 @@ const ServiceTransactionInvoice: React.FC<
 
   const fetchData = () => {
     axios
-      .get("http://localhost:3000/service-transaction/" + transactionId)
+      .get(`${Constant.coreUrl}/service-transaction/` + transactionId)
       .then((response) => {
         const { data } = response.data;
         const transaction: TransactionDto = {

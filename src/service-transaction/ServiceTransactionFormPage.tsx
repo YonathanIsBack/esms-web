@@ -1,3 +1,4 @@
+import Constant from "../constant/Constant";
 import {
   Button,
   Combobox,
@@ -60,7 +61,7 @@ const ServiceTransactionFormPage = () => {
   }, [detailRow]);
 
   const fetchCustomers = () => {
-    axios.get("http://localhost:3000/customer").then((response) => {
+    axios.get(`${Constant.coreUrl}/customer`).then((response) => {
       const { data: customers } = response.data;
       const comboBoxValues = customers.map(
         (customer: { customerName: string; id: number }) => ({
@@ -75,7 +76,7 @@ const ServiceTransactionFormPage = () => {
 
   const onSubmit = handleSubmit((data) => {
     axios
-      .post("http://localhost:3000/service-transaction", {
+      .post(`${Constant.coreUrl}/service-transaction`, {
         customer_id: data.customerId,
         transaction_date: data.transactionDate,
       })

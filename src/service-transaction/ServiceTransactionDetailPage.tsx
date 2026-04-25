@@ -10,6 +10,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import formatCurrency from "../util/formatCurrency";
+import Constant from "../constant/Constant";
 
 interface ServiceTransaction {
   customerName: string;
@@ -51,7 +52,7 @@ const ServiceTransactionDetailPage = () => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:3000/service-transaction/" + transactionId)
+      .get(`${Constant.coreUrl}/service-transaction/` + transactionId)
       .then((response) => {
         const { data } = response.data;
         const transaction = {
