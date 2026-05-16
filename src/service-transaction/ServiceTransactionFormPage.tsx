@@ -8,6 +8,7 @@ import {
   Heading,
   Input,
   Portal,
+  Separator,
   Stack,
   Text,
   useFilter,
@@ -79,6 +80,12 @@ const ServiceTransactionFormPage = () => {
       .post(`${Constant.coreUrl}/service-transaction`, {
         customer_id: data.customerId,
         transaction_date: data.transactionDate,
+        transaction_detail: data.detailInformations.map(detail => ({
+          description: detail.description,
+          item_name: detail.itemName,
+          price: detail.price,
+          quantity: detail.quantity
+        }))
       })
       .then((response) => {
         console.log(response);
@@ -178,6 +185,7 @@ const ServiceTransactionFormPage = () => {
               <Field.Label>Price</Field.Label>
               <Input {...register(`detailInformations[${index}].price`)} />
             </Field.Root>
+            <Separator />
             </>
           ))}
           <Button type="submit">Submit</Button>
