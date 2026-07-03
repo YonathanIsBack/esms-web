@@ -129,24 +129,49 @@ const ServiceTransactionFormPage = () => {
                         placeholder="Select customer"
                         borderColor="var(--color-border)"
                         color="var(--color-text)"
+                        backgroundColor="white"
                         _placeholder={{ color: "var(--color-text-muted)" }}
                         _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                        _hover={{ borderColor: "var(--color-accent)" }}
                         onFocus={() => filter("")}
                       />
                       <Combobox.IndicatorGroup>
-                        <Combobox.ClearTrigger />
-                        <Combobox.Trigger />
+                        <Combobox.ClearTrigger
+                          color="var(--color-text-muted)"
+                          _hover={{ color: "var(--color-accent)" }}
+                        />
+                        <Combobox.Trigger
+                          color="var(--color-accent)"
+                          _hover={{ color: "var(--color-accent-hover)" }}
+                        />
                       </Combobox.IndicatorGroup>
                     </Combobox.Control>
                     <Portal>
                       <Combobox.Positioner>
-                        <Combobox.Content>
-                          <Combobox.Empty>No customer found</Combobox.Empty>
+                        <Combobox.Content
+                          backgroundColor="white"
+                          borderColor="var(--color-border)"
+                          boxShadow="0 4px 12px rgba(0,0,0,0.1)"
+                        >
+                          <Combobox.Empty
+                            color="var(--color-text-muted)"
+                            padding="8px"
+                          >
+                            No customer found
+                          </Combobox.Empty>
                           {collection.items.map(
                             (item: { value: string; label: string }) => (
-                              <Combobox.Item item={item} key={item.value}>
+                              <Combobox.Item
+                                item={item}
+                                key={item.value}
+                                color="var(--color-text)"
+                                _hover={{ backgroundColor: "var(--color-accent-light)", color: "var(--color-primary)" }}
+                                _selected={{ backgroundColor: "var(--color-accent)", color: "white" }}
+                                _highlighted={{ backgroundColor: "var(--color-accent-light)", color: "var(--color-primary)" }}
+                                padding="8px 12px"
+                              >
+                                <Combobox.ItemIndicator color="var(--color-accent)" />
                                 {item.label}
-                                <Combobox.ItemIndicator />
                               </Combobox.Item>
                             )
                           )}
