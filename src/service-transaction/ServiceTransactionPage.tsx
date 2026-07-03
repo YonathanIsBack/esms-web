@@ -18,13 +18,24 @@ const ServiceTransactionPage = () => {
   };
 
   return (
-    <>
-      <Heading>Service Transactions List</Heading>
-      <a href="/service-transaction/form">
-        <Button>Add</Button>
-      </a>
+    <div className="page-container">
+      <div className="page-header">
+        <Heading color="var(--color-primary)" fontSize="2xl">
+          Service Transactions List
+        </Heading>
+        <a href="/service-transaction/form">
+          <Button
+            backgroundColor="var(--color-accent)"
+            color="white"
+            _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+            border="none"
+          >
+            Add Transaction
+          </Button>
+        </a>
+      </div>
       <ServiceTransactionTable serviceTransactions={serviceTransactions} />
-    </>
+    </div>
   );
 };
 

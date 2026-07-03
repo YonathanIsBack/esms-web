@@ -1,4 +1,3 @@
-import { Container, Stack } from "@chakra-ui/react";
 import { Route, Routes } from "react-router";
 import "./App.css";
 import SidebarMenu from "./common/SidebarMenu";
@@ -11,34 +10,32 @@ import ServiceTransactionInvoice from "./service-transaction/service-transaction
 
 function App() {
   return (
-    <>
-      <Stack>
-        <Container>
-          <SidebarMenu />
-          <Routes>
-            <Route path="/" element={<CustomerPage />} />
-            <Route path="/customer/form" element={<CustomerFormPage />} />
-            <Route path="/customer/:customerName" element={<CustomerFormPage />} />
-            <Route
-              path="/service-transaction"
-              element={<ServiceTransactionPage />}
-            />
-            <Route
-              path="/service-transaction/form"
-              element={<ServiceTransactionFormPage />}
-            />
-            <Route
-              path="/service-transaction/:transactionId/invoice"
-              element={<ServiceTransactionInvoice />}
-            />
-            <Route
-              path="/service-transaction/:transactionId"
-              element={<ServiceTransactionDetailPage />}
-            />
-          </Routes>
-        </Container>
-      </Stack>
-    </>
+    <div className="app-layout">
+      <SidebarMenu />
+      <div className="app-content">
+        <Routes>
+          <Route path="/" element={<CustomerPage />} />
+          <Route path="/customer/form" element={<CustomerFormPage />} />
+          <Route path="/customer/:customerName" element={<CustomerFormPage />} />
+          <Route
+            path="/service-transaction"
+            element={<ServiceTransactionPage />}
+          />
+          <Route
+            path="/service-transaction/form"
+            element={<ServiceTransactionFormPage />}
+          />
+          <Route
+            path="/service-transaction/:transactionId/invoice"
+            element={<ServiceTransactionInvoice />}
+          />
+          <Route
+            path="/service-transaction/:transactionId"
+            element={<ServiceTransactionDetailPage />}
+          />
+        </Routes>
+      </div>
+    </div>
   );
 }
 

@@ -99,35 +99,56 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
   });
 
   return (
-    <Container centerContent>
-      <Heading>Add new Customer</Heading>
-      <form onSubmit={onSubmit} className="form">
-        <Stack gap="4">
-          <Field.Root>
-            <Field.Label>Customer Name</Field.Label>
-            <Input
-              {...register("customerName")}
-              disabled={action === "VIEW"}
-            />
-          </Field.Root>
-          <Field.Root>
-            <Field.Label>Customer Phone Number</Field.Label>
-            <Input
-              {...register("customerPhone")}
-              disabled={action === "VIEW"}
-            />
-          </Field.Root>
-          <Field.Root>
-            <Field.Label>Customer Address</Field.Label>
-            <Input
-              {...register("customerAddress")}
-              disabled={action === "VIEW"}
-            />
-          </Field.Root>
-          {action === "VIEW" ? "" : <Button type="submit">Submit</Button>}
-        </Stack>
-      </form>
-    </Container>
+    <div className="page-container">
+      <Heading color="var(--color-primary)" fontSize="2xl" marginBottom="24px">
+        {action === "ADD" ? "Add New Customer" : action === "EDIT" ? "Edit Customer" : "Customer Details"}
+      </Heading>
+      <div className="form-card">
+        <form onSubmit={onSubmit} className="form">
+          <Stack gap="5">
+            <Field.Root>
+              <Field.Label color="var(--color-text)" fontWeight="medium">Customer Name</Field.Label>
+              <Input
+                {...register("customerName")}
+                disabled={action === "VIEW"}
+                borderColor="var(--color-border)"
+                _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+              />
+            </Field.Root>
+            <Field.Root>
+              <Field.Label color="var(--color-text)" fontWeight="medium">Customer Phone Number</Field.Label>
+              <Input
+                {...register("customerPhone")}
+                disabled={action === "VIEW"}
+                borderColor="var(--color-border)"
+                _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+              />
+            </Field.Root>
+            <Field.Root>
+              <Field.Label color="var(--color-text)" fontWeight="medium">Customer Address</Field.Label>
+              <Input
+                {...register("customerAddress")}
+                disabled={action === "VIEW"}
+                borderColor="var(--color-border)"
+                _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+              />
+            </Field.Root>
+            {action === "VIEW" ? null : (
+              <Button
+                type="submit"
+                backgroundColor="var(--color-accent)"
+                color="white"
+                _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+                border="none"
+                width="fit-content"
+              >
+                {action === "ADD" ? "Add Customer" : "Update Customer"}
+              </Button>
+            )}
+          </Stack>
+        </form>
+      </div>
+    </div>
   );
 };
 

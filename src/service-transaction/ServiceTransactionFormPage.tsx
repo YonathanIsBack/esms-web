@@ -2,13 +2,11 @@ import Constant from "../constant/Constant";
 import {
   Button,
   Combobox,
-  Container,
   Field,
   HStack,
   Heading,
   Input,
   Portal,
-  Separator,
   Stack,
   Text,
   useFilter,
@@ -104,94 +102,181 @@ const ServiceTransactionFormPage = () => {
   };
 
   return (
-    <Container centerContent>
-      <Heading>Add Transaction</Heading>
-      <form onSubmit={onSubmit} className="form">
-        <Stack gap="4">
-          <Field.Root>
-            <Field.Label>Customer Name</Field.Label>
-            <Controller
-              control={control}
-              name="customerId"
-              render={({ field }) => (
-                <Combobox.Root
-                  collection={collection}
-                  value={field.value ? [field.value] : []}
-                  onValueChange={({ value }) => field.onChange(value[0] || "")}
-                  onInputValueChange={(e) => filter(e.inputValue)}
-                  onInteractOutside={() => field.onBlur()}
-                  width="320px"
-                  required
-                >
-                  <Combobox.Control>
-                    <Combobox.Input placeholder="Type to search" />
-                    <Combobox.IndicatorGroup>
-                      <Combobox.ClearTrigger />
-                      <Combobox.Trigger />
-                    </Combobox.IndicatorGroup>
-                  </Combobox.Control>
-                  <Portal>
-                    <Combobox.Positioner>
-                      <Combobox.Content>
-                        <Combobox.Empty>No customer found</Combobox.Empty>
-                        {collection.items.map(
-                          (item: { value: string; label: string }) => (
-                            <Combobox.Item item={item} key={item.value}>
-                              {item.label}
-                              <Combobox.ItemIndicator />
-                            </Combobox.Item>
-                          )
-                        )}
-                      </Combobox.Content>
-                    </Combobox.Positioner>
-                  </Portal>
-                </Combobox.Root>
-              )}
-            ></Controller>
-          </Field.Root>
-          <Field.Root>
-            <Field.Label>Transaction Date</Field.Label>
-            <Controller
-              name="transactionDate"
-              control={control}
-              render={({ field }) => (
-                <SingleDatepicker
-                  name="transaction-date"
-                  date={field.value}
-                  onDateChange={field.onChange}
-                />
-              )}
-            ></Controller>
-          </Field.Root>
-          <HStack justify="space-between">
-            <Text>Service Information</Text>
-            <Button onClick={() => addNewDetailInforamtion()}>Add</Button>
-          </HStack>
-          {Array(detailRow).keys().map((_, index: number) => (
-            <>
+    <div className="page-container">
+      <Heading color="var(--color-primary)" fontSize="2xl" marginBottom="24px">
+        Add Transaction
+      </Heading>
+      <div className="form-card">
+        <form onSubmit={onSubmit} className="form">
+          <Stack gap="5">
             <Field.Root>
-              <Field.Label>Quantity</Field.Label>
-              <Input {...register(`detailInformations[${index}].quantity`)} />
-            </Field.Root> 
-            <Field.Root>
-              <Field.Label>Item Name</Field.Label>
-              <Input {...register(`detailInformations[${index}].itemName`)} />
+              <Field.Label color="var(--color-text)" fontWeight="medium">Customer Name</Field.Label>
+              <Controller
+                control={control}
+                name="customerId"
+                render={({ field }) => (
+                  <Combobox.Root
+                    collection={collection}
+                    value={field.value ? [field.value] : []}
+                    onValueChange={({ value }) => field.onChange(value[0] || "")}
+                    onInputValueChange={(e) => filter(e.inputValue)}
+                    onInteractOutside={() => field.onBlur()}
+                    width="320px"
+                    required
+                  >
+                    <Combobox.Control>
+                      <Combobox.Input
+                        placeholder="Select customer"
+                        borderColor="var(--color-border)"
+                        color="var(--color-text)"
+                        _placeholder={{ color: "var(--color-text-muted)" }}
+                        _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                        onFocus={() => filter("")}
+                      />
+                      <Combobox.IndicatorGroup>
+                        <Combobox.ClearTrigger />
+                        <Combobox.Trigger />
+                      </Combobox.IndicatorGroup>
+                    </Combobox.Control>
+                    <Portal>
+                      <Combobox.Positioner>
+                        <Combobox.Content>
+                          <Combobox.Empty>No customer found</Combobox.Empty>
+                          {collection.items.map(
+                            (item: { value: string; label: string }) => (
+                              <Combobox.Item item={item} key={item.value}>
+                                {item.label}
+                                <Combobox.ItemIndicator />
+                              </Combobox.Item>
+                            )
+                          )}
+                        </Combobox.Content>
+                      </Combobox.Positioner>
+                    </Portal>
+                  </Combobox.Root>
+                )}
+              ></Controller>
             </Field.Root>
             <Field.Root>
-              <Field.Label>Description</Field.Label>
-              <Input {...register(`detailInformations[${index}].description`)} />
+              <Field.Label color="var(--color-text)" fontWeight="medium">Transaction Date</Field.Label>
+              <Controller
+                name="transactionDate"
+                control={control}
+                render={({ field }) => (
+                  <SingleDatepicker
+                    name="transaction-date"
+                    date={field.value}
+                    onDateChange={field.onChange}
+                    propsConfigs={{
+                      dateInputProps: {
+                        style: {
+                          borderColor: "var(--color-border)",
+                          color: "var(--color-text)",
+                          borderRadius: "8px",
+                          padding: "8px 12px",
+                          fontSize: "14px",
+                          width: "100%",
+                        },
+                      },
+                      dayLabels: {
+                        style: {
+                          color: "var(--color-text)",
+                        },
+                      },
+                      selectedDayProps: {
+                        style: {
+                          backgroundColor: "var(--color-accent)",
+                          color: "white",
+                          borderRadius: "8px",
+                        },
+                      },
+                      todayButtonProps: {
+                        style: {
+                          color: "var(--color-accent)",
+                        },
+                      },
+                    }}
+                  />
+                )}
+              ></Controller>
             </Field.Root>
-            <Field.Root>
-              <Field.Label>Price</Field.Label>
-              <Input {...register(`detailInformations[${index}].price`)} />
-            </Field.Root>
-            <Separator />
-            </>
-          ))}
-          <Button type="submit">Submit</Button>
-        </Stack>
-      </form>
-    </Container>
+            <HStack justify="space-between" marginTop="16px">
+              <Text fontWeight="bold" fontSize="lg" color="var(--color-primary)">Service Information</Text>
+              <Button
+                onClick={() => addNewDetailInforamtion()}
+                backgroundColor="var(--color-accent)"
+                color="white"
+                _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+                border="none"
+              >
+                Add
+              </Button>
+            </HStack>
+            {Array.from({ length: detailRow }).map((_, index: number) => (
+              <Stack key={index} gap="4" padding="16px" backgroundColor="var(--color-accent-light)" borderRadius="8px" border="1px solid var(--color-border)">
+                <Field.Root>
+                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Quantity</Field.Label>
+                  <Input
+                    {...register(`detailInformations[${index}].quantity`)}
+                    type="number"
+                    placeholder="0"
+                    borderColor="var(--color-border)"
+                    color="var(--color-text)"
+                    _placeholder={{ color: "var(--color-text-muted)" }}
+                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                  />
+                </Field.Root>
+                <Field.Root>
+                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Item Name</Field.Label>
+                  <Input
+                    {...register(`detailInformations[${index}].itemName`)}
+                    placeholder="Enter item name"
+                    borderColor="var(--color-border)"
+                    color="var(--color-text)"
+                    _placeholder={{ color: "var(--color-text-muted)" }}
+                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                  />
+                </Field.Root>
+                <Field.Root>
+                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Description</Field.Label>
+                  <Input
+                    {...register(`detailInformations[${index}].description`)}
+                    placeholder="Enter description"
+                    borderColor="var(--color-border)"
+                    color="var(--color-text)"
+                    _placeholder={{ color: "var(--color-text-muted)" }}
+                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                  />
+                </Field.Root>
+                <Field.Root>
+                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Price</Field.Label>
+                  <Input
+                    {...register(`detailInformations[${index}].price`)}
+                    type="number"
+                    placeholder="0"
+                    borderColor="var(--color-border)"
+                    color="var(--color-text)"
+                    _placeholder={{ color: "var(--color-text-muted)" }}
+                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                  />
+                </Field.Root>
+              </Stack>
+            ))}
+            <Button
+              type="submit"
+              backgroundColor="var(--color-accent)"
+              color="white"
+              _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+              border="none"
+              width="fit-content"
+              marginTop="8px"
+            >
+              Submit Transaction
+            </Button>
+          </Stack>
+        </form>
+      </div>
+    </div>
   );
 };
 

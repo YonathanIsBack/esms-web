@@ -1,38 +1,52 @@
-import { Button, CloseButton, Drawer, Portal, Stack } from "@chakra-ui/react";
+import { VStack, Text, Button, Separator } from "@chakra-ui/react";
+import { useLocation } from "react-router";
+
+const navItems = [
+  { href: "/", label: "Customer" },
+  { href: "/service-transaction", label: "Service Transaction" },
+];
 
 const SidebarMenu = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const isActive = (href: string) => {
+    if (href === "/") return currentPath === "/";
+    return currentPath.startsWith(href);
+  };
+
   return (
-    <Drawer.Root placement="start">
-      <Drawer.Trigger asChild>
-        <Button variant="outline" size="sm">
-          Menu
-        </Button>
-      </Drawer.Trigger>
-      <Portal>
-        <Drawer.Backdrop />
-        <Drawer.Positioner>
-          <Drawer.Content>
-            <Drawer.Header>
-              <Drawer.Title>Electronic Service Management System</Drawer.Title>
-            </Drawer.Header>
-            <Drawer.Body>
-              <Stack>
-                <a href="/">
-                  <Button variant="outline" w="100%">
-                    Customer
-                  </Button>
-                </a>
-                <a href="/service-transaction">
-                  <Button variant="outline" w="100%">
-                    Service Transaction
-                  </Button>
-                </a>
-              </Stack>
-            </Drawer.Body>
-          </Drawer.Content>
-        </Drawer.Positioner>
-      </Portal>
-    </Drawer.Root>
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <Text color="white" fontSize="lg" fontWeight="bold" textAlign="center">
+          ESMS
+        </Text>
+        <Text color="white" fontSize="xs" opacity="0.7" textAlign="center">
+          Electronic Service Management
+        </Text>
+      </div>
+      <Separator borderColor="rgba(255,255,255,0.15)" />
+      <VStack gap="1" padding="16px" align="stretch">
+        {navItems.map((item) => (
+          <a href={item.href} key={item.href}>
+            <Button
+              w="100%"
+              justifyContent="flex-start"
+              backgroundColor={isActive(item.href) ? "var(--color-accent)" : "transparent"}
+              color="white"
+              _hover={{
+                backgroundColor: isActive(item.href) ? "var(--color-accent-hover)" : "rgba(255,255,255,0.1)",
+              }}
+              border="none"
+              paddingLeft="16px"
+              borderRadius="8px"
+            >
+              {item.label}
+            </Button>
+          </a>
+        ))}
+      </VStack>
+    </div>
   );
 };
 

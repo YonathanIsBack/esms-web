@@ -1,7 +1,6 @@
 import {
   HStack,
   Heading,
-  Separator,
   Stack,
   Table,
   Text,
@@ -74,60 +73,101 @@ const ServiceTransactionDetailPage = () => {
   };
 
   return (
-    <>
-      <Heading>Service Transactions Detail</Heading>
-      <Separator marginBottom="50px" />
-      <Stack marginBottom="50px">
-        <Heading>Customer Information</Heading>
-        <Separator />
-        <Text>Name</Text>
-        <Text>{serviceTransaction.customerName}</Text>
-        <Text>Phone Number</Text>
-        <Text>{serviceTransaction.customerPhone}</Text>
-      </Stack>
+    <div className="page-container">
+      <Heading color="var(--color-primary)" fontSize="2xl" marginBottom="24px">
+        Service Transaction Detail
+      </Heading>
 
-      <Stack marginBottom="50px">
-        <Heading>Transaction Information</Heading>
-        <Separator />
-        <HStack w="full" justifyContent="space-evenly">
+      <div className="detail-section">
+        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+          Customer Information
+        </Heading>
+        <Stack gap="3">
+          <Stack direction="row" gap="2">
+            <Text fontWeight="bold" color="var(--color-text-muted)" minWidth="120px">Name</Text>
+            <Text>{serviceTransaction.customerName}</Text>
+          </Stack>
+          <Stack direction="row" gap="2">
+            <Text fontWeight="bold" color="var(--color-text-muted)" minWidth="120px">Phone Number</Text>
+            <Text>{serviceTransaction.customerPhone}</Text>
+          </Stack>
+        </Stack>
+      </div>
+
+      <div className="detail-section">
+        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+          Transaction Information
+        </Heading>
+        <HStack w="full" justifyContent="space-between" flexWrap="wrap" gap="4">
           <Stack>
-            <Text>Transaction Date</Text>
-            <Text>{serviceTransaction.transactionDate}</Text>
+            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Transaction Date</Text>
+            <Text fontWeight="medium">{serviceTransaction.transactionDate}</Text>
           </Stack>
           <Stack>
-            <Text>Transaction UID</Text>
-            <Text>{serviceTransaction.transactionCode}</Text>
+            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Transaction UID</Text>
+            <Text fontWeight="medium">{serviceTransaction.transactionCode}</Text>
           </Stack>
           <Stack>
-            <Text>Total Price</Text>
-            <Text>{formatCurrency(serviceTransaction.totalPrice)}</Text>
+            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Total Price</Text>
+            <Text fontWeight="bold" fontSize="xl" color="var(--color-accent)">{formatCurrency(serviceTransaction.totalPrice)}</Text>
           </Stack>
         </HStack>
-      </Stack>
+      </div>
 
-      <Stack marginBottom="50px">
-        <Heading>Item Details</Heading>
-        <Separator />
+      <div className="detail-section">
+        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+          Item Details
+        </Heading>
         <Table.Root>
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>Item Name</Table.ColumnHeader>
-              <Table.ColumnHeader>Solution</Table.ColumnHeader>
-              <Table.ColumnHeader>Price</Table.ColumnHeader>
+              <Table.ColumnHeader
+                color="white"
+                backgroundColor="var(--color-secondary)"
+                padding="12px"
+                fontSize="sm"
+                textTransform="uppercase"
+                letterSpacing="wider"
+              >
+                Item Name
+              </Table.ColumnHeader>
+              <Table.ColumnHeader
+                color="white"
+                backgroundColor="var(--color-secondary)"
+                padding="12px"
+                fontSize="sm"
+                textTransform="uppercase"
+                letterSpacing="wider"
+              >
+                Solution
+              </Table.ColumnHeader>
+              <Table.ColumnHeader
+                color="white"
+                backgroundColor="var(--color-secondary)"
+                padding="12px"
+                fontSize="sm"
+                textTransform="uppercase"
+                letterSpacing="wider"
+              >
+                Price
+              </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {serviceTransaction.transactionDtls?.map((transactionDtl) => (
-              <Table.Row>
-                <Table.Cell>{transactionDtl.itemName}</Table.Cell>
-                <Table.Cell>{transactionDtl.solution}</Table.Cell>
-                <Table.Cell>{formatCurrency(transactionDtl.price)}</Table.Cell>
+            {serviceTransaction.transactionDtls?.map((transactionDtl, idx) => (
+              <Table.Row
+                backgroundColor={idx % 2 === 0 ? "white" : "#F8FAFC"}
+                _hover={{ backgroundColor: "var(--color-accent-light)" }}
+              >
+                <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{transactionDtl.itemName}</Table.Cell>
+                <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{transactionDtl.solution}</Table.Cell>
+                <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)" fontWeight="medium">{formatCurrency(transactionDtl.price)}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
         </Table.Root>
-      </Stack>
-    </>
+      </div>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomerTable from "./CustomerTable";
@@ -19,15 +19,24 @@ const CustomerPage = () => {
   };
 
   return (
-    <Stack>
-      <Heading textAlign="center">Customer List</Heading>
-      <Stack direction="row">
-        <Button>
-          <a href="/customer/form">Add</a>
-        </Button>
-      </Stack>
+    <div className="page-container">
+      <div className="page-header">
+        <Heading color="var(--color-primary)" fontSize="2xl">
+          Customer List
+        </Heading>
+        <a href="/customer/form">
+          <Button
+            backgroundColor="var(--color-accent)"
+            color="white"
+            _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+            border="none"
+          >
+            Add Customer
+          </Button>
+        </a>
+      </div>
       <CustomerTable customers={customers} />
-    </Stack>
+    </div>
   );
 };
 
