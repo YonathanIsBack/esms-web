@@ -3,11 +3,13 @@ import {
   Button,
   Combobox,
   Field,
+  Flex,
   HStack,
   Heading,
   Input,
   Portal,
   Stack,
+  Table,
   Text,
   useFilter,
   useListCollection,
@@ -196,16 +198,27 @@ const ServiceTransactionFormPage = () => {
                       dateInputProps: {
                         style: {
                           borderColor: "var(--color-border)",
-                          color: "var(--color-text)",
+                          color: "var(--color-primary)",
+                          backgroundColor: "white",
                           borderRadius: "8px",
                           padding: "8px 12px",
                           fontSize: "14px",
                           width: "100%",
                         },
+                        _hover: { borderColor: "var(--color-accent)" },
+                        _focus: { borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" },
+                      },
+                      monthYearButtonProps: {
+                        style: {
+                          color: "var(--color-primary)",
+                          fontWeight: "bold",
+                        },
                       },
                       dayLabels: {
                         style: {
-                          color: "var(--color-text)",
+                          color: "var(--color-text-muted)",
+                          fontWeight: "bold",
+                          fontSize: "12px",
                         },
                       },
                       selectedDayProps: {
@@ -218,75 +231,173 @@ const ServiceTransactionFormPage = () => {
                       todayButtonProps: {
                         style: {
                           color: "var(--color-accent)",
+                          fontWeight: "bold",
+                          borderColor: "var(--color-accent)",
+                          borderWidth: "1px",
                         },
+                      },
+                      popoverProps: {
+                        style: {
+                          borderColor: "var(--color-border)",
+                          borderRadius: "12px",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        },
+                      },
+                      dayProps: {
+                        style: {
+                          borderRadius: "8px",
+                          color: "var(--color-text)",
+                        },
+                        _hover: { backgroundColor: "var(--color-accent-light)", color: "var(--color-primary)" },
+                      },
+                      weekdayLabels: {
+                        style: {
+                          color: "var(--color-text-muted)",
+                          fontWeight: "bold",
+                          fontSize: "12px",
+                        },
+                      },
+                      navigationButtonProps: {
+                        style: {
+                          color: "var(--color-accent)",
+                          borderRadius: "8px",
+                        },
+                        _hover: { backgroundColor: "var(--color-accent-light)" },
                       },
                     }}
                   />
                 )}
               ></Controller>
             </Field.Root>
-            <HStack justify="space-between" marginTop="16px">
-              <Text fontWeight="bold" fontSize="lg" color="var(--color-primary)">Service Information</Text>
-              <Button
-                onClick={() => addNewDetailInforamtion()}
-                backgroundColor="var(--color-accent)"
-                color="white"
-                _hover={{ backgroundColor: "var(--color-accent-hover)" }}
-                border="none"
-              >
-                Add
-              </Button>
-            </HStack>
-            {Array.from({ length: detailRow }).map((_, index: number) => (
-              <Stack key={index} gap="4" padding="16px" backgroundColor="var(--color-accent-light)" borderRadius="8px" border="1px solid var(--color-border)">
-                <Field.Root>
-                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Quantity</Field.Label>
-                  <Input
-                    {...register(`detailInformations[${index}].quantity`)}
-                    type="number"
-                    placeholder="0"
-                    borderColor="var(--color-border)"
-                    color="var(--color-text)"
-                    _placeholder={{ color: "var(--color-text-muted)" }}
-                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
-                  />
-                </Field.Root>
-                <Field.Root>
-                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Item Name</Field.Label>
-                  <Input
-                    {...register(`detailInformations[${index}].itemName`)}
-                    placeholder="Enter item name"
-                    borderColor="var(--color-border)"
-                    color="var(--color-text)"
-                    _placeholder={{ color: "var(--color-text-muted)" }}
-                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
-                  />
-                </Field.Root>
-                <Field.Root>
-                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Description</Field.Label>
-                  <Input
-                    {...register(`detailInformations[${index}].description`)}
-                    placeholder="Enter description"
-                    borderColor="var(--color-border)"
-                    color="var(--color-text)"
-                    _placeholder={{ color: "var(--color-text-muted)" }}
-                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
-                  />
-                </Field.Root>
-                <Field.Root>
-                  <Field.Label color="var(--color-secondary)" fontWeight="medium">Price</Field.Label>
-                  <Input
-                    {...register(`detailInformations[${index}].price`)}
-                    type="number"
-                    placeholder="0"
-                    borderColor="var(--color-border)"
-                    color="var(--color-text)"
-                    _placeholder={{ color: "var(--color-text-muted)" }}
-                    _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
-                  />
-                </Field.Root>
-              </Stack>
-            ))}
+            <Stack gap="3" marginTop="16px">
+              <HStack justify="space-between">
+                <Text fontWeight="bold" fontSize="lg" color="var(--color-primary)">Service Information</Text>
+                <Button
+                  onClick={() => addNewDetailInforamtion()}
+                  backgroundColor="var(--color-accent)"
+                  color="white"
+                  _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+                  border="none"
+                >
+                  Add
+                </Button>
+              </HStack>
+              <Table.Root>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.ColumnHeader
+                      textAlign="center"
+                      color="white"
+                      backgroundColor="var(--color-secondary)"
+                      padding="10px"
+                      fontSize="sm"
+                      textTransform="uppercase"
+                      letterSpacing="wider"
+                      width="80px"
+                    >
+                      Qty
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader
+                      textAlign="center"
+                      color="white"
+                      backgroundColor="var(--color-secondary)"
+                      padding="10px"
+                      fontSize="sm"
+                      textTransform="uppercase"
+                      letterSpacing="wider"
+                    >
+                      Item Name
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader
+                      textAlign="center"
+                      color="white"
+                      backgroundColor="var(--color-secondary)"
+                      padding="10px"
+                      fontSize="sm"
+                      textTransform="uppercase"
+                      letterSpacing="wider"
+                    >
+                      Description
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader
+                      textAlign="center"
+                      color="white"
+                      backgroundColor="var(--color-secondary)"
+                      padding="10px"
+                      fontSize="sm"
+                      textTransform="uppercase"
+                      letterSpacing="wider"
+                      width="180px"
+                    >
+                      Price
+                    </Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {Array.from({ length: detailRow }).map((_, index: number) => (
+                    <Table.Row key={index} backgroundColor="white">
+                      <Table.Cell padding="8px" borderBottom="1px solid" borderColor="var(--color-border)">
+                        <Input
+                          {...register(`detailInformations[${index}].quantity`, { valueAsNumber: true })}
+                          type="number"
+                          defaultValue="1"
+                          min="1"
+                          borderColor="var(--color-border)"
+                          color="var(--color-text)"
+                          textAlign="center"
+                          _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                        />
+                      </Table.Cell>
+                      <Table.Cell padding="8px" borderBottom="1px solid" borderColor="var(--color-border)">
+                        <Input
+                          {...register(`detailInformations[${index}].itemName`)}
+                          placeholder="Enter item name"
+                          borderColor="var(--color-border)"
+                          color="var(--color-text)"
+                          _placeholder={{ color: "var(--color-text-muted)" }}
+                          _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                        />
+                      </Table.Cell>
+                      <Table.Cell padding="8px" borderBottom="1px solid" borderColor="var(--color-border)">
+                        <Input
+                          {...register(`detailInformations[${index}].description`)}
+                          placeholder="Enter description"
+                          borderColor="var(--color-border)"
+                          color="var(--color-text)"
+                          _placeholder={{ color: "var(--color-text-muted)" }}
+                          _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                        />
+                      </Table.Cell>
+                      <Table.Cell padding="8px" borderBottom="1px solid" borderColor="var(--color-border)">
+                        <Flex position="relative" align="center">
+                          <Text
+                            position="absolute"
+                            left="12px"
+                            color="var(--color-text-muted)"
+                            fontWeight="bold"
+                            fontSize="sm"
+                            zIndex="1"
+                            pointerEvents="none"
+                          >
+                            IDR
+                          </Text>
+                          <Input
+                            {...register(`detailInformations[${index}].price`, { valueAsNumber: true })}
+                            type="number"
+                            defaultValue="0"
+                            min="0"
+                            paddingLeft="48px"
+                            borderColor="var(--color-border)"
+                            color="var(--color-text)"
+                            _focus={{ borderColor: "var(--color-accent)", boxShadow: "0 0 0 1px var(--color-accent)" }}
+                          />
+                        </Flex>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table.Root>
+            </Stack>
             <Button
               type="submit"
               backgroundColor="var(--color-accent)"
