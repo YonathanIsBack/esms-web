@@ -1,9 +1,30 @@
 import { useState } from "react";
 import { Button, Field, Flex, Input, Stack, Text } from "@chakra-ui/react";
+import axios from "axios";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import Constant from "../constant/Constant";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = () => {
+    setLoading(true);
+    axios
+      .post(`${Constant.coreUrl}/login`, { username, password })
+      .then((response) => {
+        const { jwtToken } = response.data.data;
+        localStorage.setItem("jwtToken", jwtToken);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <Flex
@@ -42,6 +63,9 @@ const LoginPage = () => {
               color="var(--color-text)"
               _placeholder={{ color: "var(--color-text-muted)" }}
               _focus={{ boxShadow: "0 0 0 2px var(--color-accent)" }}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
             />
           </Field.Root>
           <Field.Root>
@@ -58,6 +82,9 @@ const LoginPage = () => {
                 _placeholder={{ color: "var(--color-text-muted)" }}
                 _focus={{ boxShadow: "0 0 0 2px var(--color-accent)" }}
                 paddingRight="40px"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
               />
               <Button
                 position="absolute"
@@ -85,8 +112,10 @@ const LoginPage = () => {
             width="100%"
             size="lg"
             marginTop="8px"
+            onClick={handleLogin}
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </Stack>
       </Flex>
