@@ -30,7 +30,7 @@ const useValidateSession = () => {
     }
 
     axios
-      .get(`${Constant.coreUrl}/session/verify`, {
+      .post(`${Constant.coreUrl}/session/verify`, {}, {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
       .then(() => {
