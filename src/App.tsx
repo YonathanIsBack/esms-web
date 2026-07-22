@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router";
 import "./App.css";
 import SidebarMenu from "./common/SidebarMenu";
+import useValidateSession from "./hook/useValidateSession";
 import CustomerFormPage from "./customer/CustomerFormPage";
 import CustomerPage from "./customer/CustomerPage";
 import LoginPage from "./login/LoginPage";
@@ -19,6 +20,10 @@ function App() {
 }
 
 function MainLayout() {
+  const isValidated = useValidateSession();
+
+  if (!isValidated) return null;
+
   return (
     <div className="app-layout">
       <SidebarMenu />
