@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Field, Flex, Input, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import Constant from "../constant/Constant";
+import useValidateSession from "../hook/useValidateSession";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const isValidated = useValidateSession();
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isValidated) {
+      navigate("/customer");
+    }
+  }, [isValidated, navigate]);
 
   const handleLogin = () => {
     setLoading(true);
