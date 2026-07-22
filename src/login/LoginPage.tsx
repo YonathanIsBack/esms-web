@@ -66,6 +66,7 @@ const LoginPage = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
+              onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
             />
           </Field.Root>
           <Field.Root>
@@ -85,6 +86,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
               />
               <Button
                 position="absolute"
