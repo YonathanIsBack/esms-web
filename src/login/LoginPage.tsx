@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Button, Field, Flex, Input, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import { useNavigate } from "react-router";
 import Constant from "../constant/Constant";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +19,7 @@ const LoginPage = () => {
       .then((response) => {
         const { jwtToken } = response.data.data;
         localStorage.setItem("jwtToken", jwtToken);
+        navigate("/customer");
       })
       .catch((error) => {
         console.log(error);
