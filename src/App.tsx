@@ -29,7 +29,7 @@ function MainLayout() {
       <SidebarMenu />
       <div className="app-content">
         <Routes>
-          <Route path="/" element={<CustomerPage />} />
+          <Route path="/customer" element={<CustomerPage />} />
           <Route path="/customer/form" element={<CustomerFormPage />} />
           <Route path="/customer/:customerName" element={<CustomerFormPage />} />
           <Route
