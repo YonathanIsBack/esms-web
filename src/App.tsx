@@ -5,6 +5,7 @@ import useValidateSession from "./hook/useValidateSession";
 import CustomerFormPage from "./customer/CustomerFormPage";
 import CustomerPage from "./customer/CustomerPage";
 import LoginPage from "./login/LoginPage";
+import NotFoundPage from "./not-found/NotFoundPage";
 import ServiceTransactionDetailPage from "./service-transaction/ServiceTransactionDetailPage";
 import ServiceTransactionFormPage from "./service-transaction/ServiceTransactionFormPage";
 import ServiceTransactionPage from "./service-transaction/ServiceTransactionPage";
@@ -48,6 +49,7 @@ function MainLayout() {
             path="/service-transaction/:transactionId"
             element={<ServiceTransactionDetailPage />}
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { Button, Stack, Table } from "@chakra-ui/react";
+import { Link } from "react-router";
 
 const ServiceTransactionTable: React.FC<ServiceTransactionTablePropType> = ({
   serviceTransactions,
@@ -79,7 +80,7 @@ const ServiceTransactionTable: React.FC<ServiceTransactionTablePropType> = ({
               </Table.Cell>
               <Table.Cell textAlign="end" padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">
                 <Stack direction="row" gap="2">
-                  <a href={`/service-transaction/${serviceTransaction.id}`}>
+                  <Link to={`/service-transaction/${serviceTransaction.id}`}>
                     <Button
                       backgroundColor="var(--color-accent)"
                       color="white"
@@ -89,7 +90,7 @@ const ServiceTransactionTable: React.FC<ServiceTransactionTablePropType> = ({
                     >
                       Detail
                     </Button>
-                  </a>
+                  </Link>
                   <a target="blank" href={`/service-transaction/${serviceTransaction.id}/invoice`}>
                     <Button
                       backgroundColor="var(--color-secondary)"

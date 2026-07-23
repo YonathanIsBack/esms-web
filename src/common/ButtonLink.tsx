@@ -1,8 +1,9 @@
 import { Button } from "@chakra-ui/react";
+import { Link } from "react-router";
 
 const ButtonLink: React.FC<ButtonLinkPropType> = ({ url, label }) => {
   return (
-    <a href={url}>
+    <Link to={url}>
       <Button
         backgroundColor="var(--color-accent)"
         color="white"
@@ -12,7 +13,7 @@ const ButtonLink: React.FC<ButtonLinkPropType> = ({ url, label }) => {
       >
         {label}
       </Button>
-    </a>
+    </Link>
   );
 };
 

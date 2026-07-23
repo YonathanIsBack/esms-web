@@ -1,4 +1,5 @@
 import { Button, Heading } from "@chakra-ui/react";
+import { Link } from "react-router";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomerTable from "./CustomerTable";
@@ -24,7 +25,7 @@ const CustomerPage = () => {
         <Heading color="var(--color-primary)" fontSize="2xl">
           Customer List
         </Heading>
-        <a href="/customer/form">
+        <Link to="/customer/form">
           <Button
             backgroundColor="var(--color-accent)"
             color="white"
@@ -33,7 +34,7 @@ const CustomerPage = () => {
           >
             Add Customer
           </Button>
-        </a>
+        </Link>
       </div>
       <CustomerTable customers={customers} />
     </div>

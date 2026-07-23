@@ -1,5 +1,5 @@
 import { VStack, Text, Button, Separator } from "@chakra-ui/react";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const navItems = [
   { href: "/", label: "Customer" },
@@ -28,7 +28,7 @@ const SidebarMenu = () => {
       <Separator borderColor="rgba(255,255,255,0.15)" />
       <VStack gap="1" padding="16px" align="stretch">
         {navItems.map((item) => (
-          <a href={item.href} key={item.href}>
+          <Link to={item.href} key={item.href}>
             <Button
               w="100%"
               justifyContent="flex-start"
@@ -43,7 +43,7 @@ const SidebarMenu = () => {
             >
               {item.label}
             </Button>
-          </a>
+          </Link>
         ))}
       </VStack>
     </div>

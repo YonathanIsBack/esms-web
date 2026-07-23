@@ -1,4 +1,5 @@
 import { Button, Heading } from "@chakra-ui/react";
+import { Link } from "react-router";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ServiceTransactionTable from "./ServiceTransactionTable";
@@ -23,7 +24,7 @@ const ServiceTransactionPage = () => {
         <Heading color="var(--color-primary)" fontSize="2xl">
           Service Transactions List
         </Heading>
-        <a href="/service-transaction/form">
+        <Link to="/service-transaction/form">
           <Button
             backgroundColor="var(--color-accent)"
             color="white"
@@ -32,7 +33,7 @@ const ServiceTransactionPage = () => {
           >
             Add Transaction
           </Button>
-        </a>
+        </Link>
       </div>
       <ServiceTransactionTable serviceTransactions={serviceTransactions} />
     </div>
