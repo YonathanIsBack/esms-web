@@ -1,7 +1,9 @@
-import { Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
+import { Link } from "react-router";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomerTable from "./CustomerTable";
+import Constant from "../constant/Constant";
 
 const CustomerPage = () => {
   const [customers, setCustomer] = useState([]);
@@ -11,22 +13,31 @@ const CustomerPage = () => {
   }, []);
 
   const fetchData = () => {
-    axios.get("http://localhost:3000/customer").then((response) => {
+    axios.get(`${Constant.coreUrl}/customer`).then((response) => {
       const { data: customers } = response.data;
       setCustomer(customers);
     });
   };
 
   return (
-    <Stack>
-      <Heading textAlign="center">Customer List</Heading>
-      <Stack direction="row">
-        <Button>
-          <a href="/customer/form">Add</a>
-        </Button>
-      </Stack>
+    <div className="page-container">
+      <div className="page-header">
+        <Heading color="var(--color-primary)" fontSize="2xl">
+          Customer List
+        </Heading>
+        <Link to="/customer/form">
+          <Button
+            backgroundColor="var(--color-accent)"
+            color="white"
+            _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+            border="none"
+          >
+            Add Customer
+          </Button>
+        </Link>
+      </div>
       <CustomerTable customers={customers} />
-    </Stack>
+    </div>
   );
 };
 

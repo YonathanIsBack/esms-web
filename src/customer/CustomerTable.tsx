@@ -2,56 +2,98 @@ import ButtonLink from "../common/ButtonLink";
 import { Button, Stack, Table } from "@chakra-ui/react";
 import axios from "axios";
 import React from "react";
-import { useNavigate } from "react-router";
+import Constant from "../constant/Constant";
 
 const CustomerTable: React.FC<CustomerListPropType> = ({ customers }) => {
-  const navigate = useNavigate();
-
   const deleteUser = (customerId: number) => {
     axios
-      .delete(`http://localhost:3000/customer/${customerId}`)
+      .delete(`${Constant.coreUrl}/customer/${customerId}`)
       .then((response) => {
         window.location.reload();
       });
   };
 
   return (
-    <>
-      <Stack width="100%">
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader textAlign="center">
-                Customer Name
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center">
-                Customer Phone
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center">
-                Customer Address
-              </Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="center">Action</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {customers.map((customer) => (
-              <Table.Row>
-                <Table.Cell>{customer.customerName}</Table.Cell>
-                <Table.Cell>{customer.customerPhone}</Table.Cell>
-                <Table.Cell>{customer.customerAddress}</Table.Cell>
-                <Table.Cell >
+    <div className="table-container">
+      <Table.Root>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader
+              textAlign="center"
+              color="white"
+              backgroundColor="var(--color-secondary)"
+              padding="12px"
+              fontSize="sm"
+              textTransform="uppercase"
+              letterSpacing="wider"
+            >
+              Customer Name
+            </Table.ColumnHeader>
+            <Table.ColumnHeader
+              textAlign="center"
+              color="white"
+              backgroundColor="var(--color-secondary)"
+              padding="12px"
+              fontSize="sm"
+              textTransform="uppercase"
+              letterSpacing="wider"
+            >
+              Customer Phone
+            </Table.ColumnHeader>
+            <Table.ColumnHeader
+              textAlign="center"
+              color="white"
+              backgroundColor="var(--color-secondary)"
+              padding="12px"
+              fontSize="sm"
+              textTransform="uppercase"
+              letterSpacing="wider"
+            >
+              Customer Address
+            </Table.ColumnHeader>
+            <Table.ColumnHeader
+              textAlign="center"
+              color="white"
+              backgroundColor="var(--color-secondary)"
+              padding="12px"
+              fontSize="sm"
+              textTransform="uppercase"
+              letterSpacing="wider"
+            >
+              Action
+            </Table.ColumnHeader>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {customers.map((customer, idx) => (
+            <Table.Row
+              backgroundColor={idx % 2 === 0 ? "white" : "#F8FAFC"}
+              _hover={{ backgroundColor: "var(--color-accent-light)" }}
+            >
+              <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{customer.customerName}</Table.Cell>
+              <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{customer.customerPhone}</Table.Cell>
+              <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{customer.customerAddress}</Table.Cell>
+              <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">
+                <Stack direction="row" gap="2">
                   <ButtonLink url={`customer/${customer.customerName}?action=VIEW`} label="Detail"/>
                   <ButtonLink url={`customer/${customer.customerName}?action=EDIT`} label="Edit"/>
-                  <Button onClick={() => deleteUser(customer.id)}>
+                  <Button
+                    backgroundColor="var(--color-danger)"
+                    color="white"
+                    _hover={{ backgroundColor: "var(--color-danger-hover)" }}
+                    size="sm"
+                    border="none"
+                    onClick={() => deleteUser(customer.id)}
+                  >
                     Delete
                   </Button>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-      </Stack>
-    </>
+                </Stack>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
+    </div>
   );
 };
 
