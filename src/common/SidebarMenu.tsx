@@ -2,7 +2,7 @@ import { VStack, Text, Button, Separator } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router";
 
 const navItems = [
-  { href: "/", label: "Customer" },
+  { href: "/customer", label: "Customer" },
   { href: "/service-transaction", label: "Service Transaction" },
 ];
 

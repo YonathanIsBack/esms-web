@@ -75,8 +75,8 @@ const CustomerTable: React.FC<CustomerListPropType> = ({ customers }) => {
               <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{customer.customerAddress}</Table.Cell>
               <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">
                 <Stack direction="row" gap="2">
-                  <ButtonLink url={`customer/${customer.customerName}?action=VIEW`} label="Detail"/>
-                  <ButtonLink url={`customer/${customer.customerName}?action=EDIT`} label="Edit"/>
+                  <ButtonLink url={`${customer.customerName}?action=VIEW`} label="Detail"/>
+                  <ButtonLink url={`${customer.customerName}?action=EDIT`} label="Edit"/>
                   <Button
                     backgroundColor="var(--color-danger)"
                     color="white"
