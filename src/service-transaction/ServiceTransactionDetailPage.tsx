@@ -1,4 +1,7 @@
 import {
+  Button,
+  Grid,
+  GridItem,
   HStack,
   Heading,
   Stack,
@@ -10,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import formatCurrency from "../util/formatCurrency";
 import Constant from "../constant/Constant";
+import { Link } from "react-router";
 
 interface ServiceTransaction {
   customerName: string;
@@ -72,6 +76,16 @@ const ServiceTransactionDetailPage = () => {
       });
   };
 
+  const handleCopyRaw = () => {
+    axios
+      .get(
+        `${Constant.coreUrl}/service-transaction/${serviceTransaction.transactionCode}/invoice/plain`
+      )
+      .then(async (response) => {
+        await navigator.clipboard.writeText(response.data);
+      });
+  };
+
   return (
     <div className="page-container">
       <Heading color="var(--color-primary)" fontSize="2xl" marginBottom="24px">
@@ -79,43 +93,91 @@ const ServiceTransactionDetailPage = () => {
       </Heading>
 
       <div className="detail-section">
-        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+        <Heading
+          fontSize="lg"
+          color="var(--color-secondary)"
+          marginBottom="16px"
+        >
           Customer Information
         </Heading>
         <Stack gap="3">
           <Stack direction="row" gap="2">
-            <Text fontWeight="bold" color="var(--color-text-muted)" minWidth="120px">Name</Text>
+            <Text
+              fontWeight="bold"
+              color="var(--color-text-muted)"
+              minWidth="120px"
+            >
+              Name
+            </Text>
             <Text>{serviceTransaction.customerName}</Text>
           </Stack>
           <Stack direction="row" gap="2">
-            <Text fontWeight="bold" color="var(--color-text-muted)" minWidth="120px">Phone Number</Text>
+            <Text
+              fontWeight="bold"
+              color="var(--color-text-muted)"
+              minWidth="120px"
+            >
+              Phone Number
+            </Text>
             <Text>{serviceTransaction.customerPhone}</Text>
           </Stack>
         </Stack>
       </div>
 
       <div className="detail-section">
-        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+        <Heading
+          fontSize="lg"
+          color="var(--color-secondary)"
+          marginBottom="16px"
+        >
           Transaction Information
         </Heading>
         <HStack w="full" justifyContent="space-between" flexWrap="wrap" gap="4">
           <Stack>
-            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Transaction Date</Text>
-            <Text fontWeight="medium">{serviceTransaction.transactionDate}</Text>
+            <Text
+              fontWeight="bold"
+              color="var(--color-text-muted)"
+              fontSize="sm"
+            >
+              Transaction Date
+            </Text>
+            <Text fontWeight="medium">
+              {serviceTransaction.transactionDate}
+            </Text>
           </Stack>
           <Stack>
-            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Transaction UID</Text>
-            <Text fontWeight="medium">{serviceTransaction.transactionCode}</Text>
+            <Text
+              fontWeight="bold"
+              color="var(--color-text-muted)"
+              fontSize="sm"
+            >
+              Transaction UID
+            </Text>
+            <Text fontWeight="medium">
+              {serviceTransaction.transactionCode}
+            </Text>
           </Stack>
           <Stack>
-            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Total Price</Text>
-            <Text fontWeight="bold" fontSize="xl" color="var(--color-accent)">{formatCurrency(serviceTransaction.totalPrice)}</Text>
+            <Text
+              fontWeight="bold"
+              color="var(--color-text-muted)"
+              fontSize="sm"
+            >
+              Total Price
+            </Text>
+            <Text fontWeight="bold" fontSize="xl" color="var(--color-accent)">
+              {formatCurrency(serviceTransaction.totalPrice)}
+            </Text>
           </Stack>
         </HStack>
       </div>
 
       <div className="detail-section">
-        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+        <Heading
+          fontSize="lg"
+          color="var(--color-secondary)"
+          marginBottom="16px"
+        >
           Item Details
         </Heading>
         <Table.Root>
@@ -159,13 +221,69 @@ const ServiceTransactionDetailPage = () => {
                 backgroundColor={idx % 2 === 0 ? "white" : "#F8FAFC"}
                 _hover={{ backgroundColor: "var(--color-accent-light)" }}
               >
-                <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{transactionDtl.itemName}</Table.Cell>
-                <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)">{transactionDtl.solution}</Table.Cell>
-                <Table.Cell padding="12px" borderBottom="1px solid" borderColor="var(--color-border)" fontWeight="medium">{formatCurrency(transactionDtl.price)}</Table.Cell>
+                <Table.Cell
+                  padding="12px"
+                  borderBottom="1px solid"
+                  borderColor="var(--color-border)"
+                >
+                  {transactionDtl.itemName}
+                </Table.Cell>
+                <Table.Cell
+                  padding="12px"
+                  borderBottom="1px solid"
+                  borderColor="var(--color-border)"
+                >
+                  {transactionDtl.solution}
+                </Table.Cell>
+                <Table.Cell
+                  padding="12px"
+                  borderBottom="1px solid"
+                  borderColor="var(--color-border)"
+                  fontWeight="medium"
+                >
+                  {formatCurrency(transactionDtl.price)}
+                </Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
         </Table.Root>
+      </div>
+
+      <div className="detail-section">
+        <Heading
+          fontSize="lg"
+          color="var(--color-secondary)"
+          marginBottom="16px"
+        >
+          Actions
+        </Heading>
+        <Grid templateColumns="repeat(10, 1fr)" gap="1">
+          <GridItem>
+            <Link to={`/service-transaction/${transactionId}/invoice`}>
+              <Button
+                backgroundColor="var(--color-secondary)"
+                color="white"
+                _hover={{ backgroundColor: "var(--color-primary)" }}
+                size="sm"
+                border="none"
+              >
+                Download PDF
+              </Button>
+            </Link>
+          </GridItem>
+          <GridItem>
+            <Button
+              backgroundColor="var(--color-secondary)"
+              color="white"
+              _hover={{ backgroundColor: "var(--color-primary)" }}
+              size="sm"
+              border="none"
+              onClick={handleCopyRaw}
+            >
+              Copy Raw Text
+            </Button>
+          </GridItem>
+        </Grid>
       </div>
     </div>
   );
