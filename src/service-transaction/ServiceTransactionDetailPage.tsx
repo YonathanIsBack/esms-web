@@ -42,6 +42,7 @@ const defaultServiceTransaction = {
   transactionDate: "",
   transactionCode: "",
   totalPrice: "",
+  status: "",
   transactionDtls: [],
 };
 
@@ -58,12 +59,14 @@ const ServiceTransactionDetailPage = () => {
       .get(`${Constant.coreUrl}/service-transaction/` + transactionId)
       .then((response) => {
         const { data } = response.data;
+        
         const transaction = {
           transactionCode: data.transaction_code,
           customerName: data.customer_name,
           customerPhone: data.customer_phone,
           transactionDate: data.transaction_date,
           totalPrice: data.total_price,
+          status: data.status,
           transactionDtls: data.transaction_dtls.map(
             (transaction_dtl: TransactionDetailResponse) => ({
               itemName: transaction_dtl.item_name,
@@ -168,6 +171,18 @@ const ServiceTransactionDetailPage = () => {
             <Text fontWeight="bold" fontSize="xl" color="var(--color-accent)">
               {formatCurrency(serviceTransaction.totalPrice)}
             </Text>
+          </Stack>
+        </HStack>
+        <HStack>
+          <Stack>
+            <Text
+              fontWeight="bold"
+              color="var(--color-text-muted)"
+              fontSize="sm"
+            >
+              Transaction Status
+            </Text>
+            <Text fontWeight="medium">{serviceTransaction.status}</Text>
           </Stack>
         </HStack>
       </div>
