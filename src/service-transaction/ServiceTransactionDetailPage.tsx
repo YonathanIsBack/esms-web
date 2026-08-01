@@ -4,6 +4,8 @@ import {
   GridItem,
   HStack,
   Heading,
+  Menu,
+  Portal,
   Stack,
   Table,
   Text,
@@ -21,6 +23,7 @@ interface ServiceTransaction {
   transactionDate: string;
   transactionCode: string;
   totalPrice: string;
+  status: string;
   transactionDtls: TransactionDetail[];
 }
 
@@ -59,7 +62,7 @@ const ServiceTransactionDetailPage = () => {
       .get(`${Constant.coreUrl}/service-transaction/` + transactionId)
       .then((response) => {
         const { data } = response.data;
-        
+
         const transaction = {
           transactionCode: data.transaction_code,
           customerName: data.customer_name,
@@ -86,6 +89,20 @@ const ServiceTransactionDetailPage = () => {
       )
       .then(async (response) => {
         await navigator.clipboard.writeText(response.data);
+      });
+  };
+
+  const handlePayOperation = () => {
+    console.log("pay!");
+
+    axios
+      .post(`${Constant.coreUrl}/service-transaction/operation`, {
+        operationName: "pay",
+        serviceTransactionCode: transactionId,
+      })
+      .then((response) => {
+        const { data } = response;
+        window.location.reload();
       });
   };
 
@@ -128,13 +145,31 @@ const ServiceTransactionDetailPage = () => {
       </div>
 
       <div className="detail-section">
-        <Heading
-          fontSize="lg"
-          color="var(--color-secondary)"
-          marginBottom="16px"
-        >
-          Transaction Information
-        </Heading>
+        <HStack w="full" justifyContent="space-between">
+          <Heading
+            fontSize="lg"
+            color="var(--color-secondary)"
+            marginBottom="16px"
+          >
+            Transaction Information
+          </Heading>
+          <Menu.Root>
+            <Menu.Trigger asChild>
+              <Button variant="solid" size="sm">
+                Operation
+              </Button>
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content>
+                  <Menu.Item value="pay" onClick={handlePayOperation}>
+                    Pay
+                  </Menu.Item>
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
+        </HStack>
         <HStack w="full" justifyContent="space-between" flexWrap="wrap" gap="4">
           <Stack>
             <Text
