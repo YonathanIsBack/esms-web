@@ -10,6 +10,7 @@ interface DialogModalProps {
   cancelText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
+  showActions?: boolean;
 }
 
 const DialogModal = ({
@@ -21,6 +22,7 @@ const DialogModal = ({
   cancelText = "Cancel",
   onConfirm,
   onCancel,
+  showActions = true,
 }: DialogModalProps) => {
   const handleConfirm = () => {
     onConfirm?.();
@@ -45,26 +47,28 @@ const DialogModal = ({
               <Dialog.Title color="white">{title}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>{body}</Dialog.Body>
-            <Dialog.Footer>
-              <Button
-                color="var(--color-secondary)"
-                border="1px solid var(--color-border)"
-                size="sm"
-                onClick={handleCancel}
-              >
-                {cancelText}
-              </Button>
-              <Button
-                backgroundColor="var(--color-secondary)"
-                color="white"
-                _hover={{ backgroundColor: "var(--color-primary)" }}
-                size="sm"
-                border="none"
-                onClick={handleConfirm}
-              >
-                {confirmText}
-              </Button>
-            </Dialog.Footer>
+            {showActions && (
+              <Dialog.Footer>
+                <Button
+                  color="var(--color-secondary)"
+                  border="1px solid var(--color-border)"
+                  size="sm"
+                  onClick={handleCancel}
+                >
+                  {cancelText}
+                </Button>
+                <Button
+                  backgroundColor="var(--color-secondary)"
+                  color="white"
+                  _hover={{ backgroundColor: "var(--color-primary)" }}
+                  size="sm"
+                  border="none"
+                  onClick={handleConfirm}
+                >
+                  {confirmText}
+                </Button>
+              </Dialog.Footer>
+            )}
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" color="white" />
             </Dialog.CloseTrigger>

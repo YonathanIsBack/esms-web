@@ -16,6 +16,7 @@ import { useParams } from "react-router";
 import formatCurrency from "../util/formatCurrency";
 import Constant from "../constant/Constant";
 import { Link } from "react-router";
+import DialogModal from "../common/DialogModal";
 
 interface ServiceTransaction {
   customerName: string;
@@ -49,6 +50,22 @@ const defaultServiceTransaction = {
   transactionDtls: [],
 };
 
+const dialogStateTitle = {
+  confirm: "Confirm Payment?",
+  success: "Success",
+  error: "Failed to process transaction",
+  default: "",
+} as const;
+
+const dialogStateBody = {
+  confirm: "Are you sure you want to confirm payment?",
+  success: "Transaction has been paid",
+  error: "",
+  default: "",
+} as const;
+
+type DialogState = keyof typeof dialogStateTitle | null;
+
 const ServiceTransactionDetailPage = () => {
   const { transactionId } = useParams();
   const [serviceTransaction, setServiceTransaction] =
@@ -56,6 +73,8 @@ const ServiceTransactionDetailPage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  const [dialogState, setDialogState] = useState<DialogState>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchData = () => {
     axios
@@ -93,8 +112,6 @@ const ServiceTransactionDetailPage = () => {
   };
 
   const handlePayOperation = () => {
-    console.log("pay!");
-
     axios
       .post(`${Constant.coreUrl}/service-transaction/operation`, {
         operationName: "pay",
@@ -102,8 +119,16 @@ const ServiceTransactionDetailPage = () => {
       })
       .then((response) => {
         const { data } = response;
-        window.location.reload();
+        setDialogState("success");
+      })
+      .catch((exception) => {
+        setErrorMessage(exception.response?.data?.message || "");
+        setDialogState("error");
       });
+  };
+
+  const handleOpenConfirm = () => {
+    setDialogState("confirm");
   };
 
   return (
@@ -162,7 +187,7 @@ const ServiceTransactionDetailPage = () => {
             <Portal>
               <Menu.Positioner>
                 <Menu.Content>
-                  <Menu.Item value="pay" onClick={handlePayOperation}>
+                  <Menu.Item value="pay" onClick={handleOpenConfirm}>
                     Pay
                   </Menu.Item>
                 </Menu.Content>
@@ -334,6 +359,23 @@ const ServiceTransactionDetailPage = () => {
             </Button>
           </GridItem>
         </Grid>
+        <DialogModal
+          openModal={dialogState !== null}
+          onOpenChange={(e) => {
+            if (!e.open) setDialogState(null);
+          }}
+          title={dialogState ? dialogStateTitle[dialogState] : dialogStateTitle.default}
+          body={
+            dialogState === "error"
+              ? errorMessage
+              : dialogState
+              ? dialogStateBody[dialogState]
+              : dialogStateBody.default
+          }
+          onConfirm={handlePayOperation}
+          onCancel={() => setDialogState(null)}
+          showActions={dialogState === "confirm"}
+        />
       </div>
     </div>
   );
