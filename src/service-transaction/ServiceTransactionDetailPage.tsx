@@ -66,15 +66,22 @@ const dialogStateBody = {
 
 type DialogState = keyof typeof dialogStateTitle | null;
 
+interface Operation {
+  operationName: string;
+  displayName: string;
+}
+
 const ServiceTransactionDetailPage = () => {
   const { transactionId } = useParams();
   const [serviceTransaction, setServiceTransaction] =
     useState<ServiceTransaction>(defaultServiceTransaction);
   useEffect(() => {
     fetchData();
+    fetchOperations();
   }, []);
   const [dialogState, setDialogState] = useState<DialogState>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [operations, setOperations] = useState<Operation[]>([]);
 
   const fetchData = () => {
     apiClient
@@ -98,6 +105,15 @@ const ServiceTransactionDetailPage = () => {
           ),
         };
         setServiceTransaction(transaction);
+      });
+  };
+
+  const fetchOperations = () => {
+    apiClient
+      .get(`${Constant.coreUrl}/service-transaction/operation/${transactionId}`)
+      .then((response) => {
+        const { data } = response.data;
+        setOperations(data);
       });
   };
 
@@ -179,22 +195,30 @@ const ServiceTransactionDetailPage = () => {
           >
             Transaction Information
           </Heading>
-          <Menu.Root>
-            <Menu.Trigger asChild>
-              <Button variant="solid" size="sm">
-                Operation
-              </Button>
-            </Menu.Trigger>
-            <Portal>
-              <Menu.Positioner>
-                <Menu.Content>
-                  <Menu.Item value="pay" onClick={handleOpenConfirm}>
-                    Pay
-                  </Menu.Item>
-                </Menu.Content>
-              </Menu.Positioner>
-            </Portal>
-          </Menu.Root>
+          {operations.length > 0 && (
+            <Menu.Root>
+              <Menu.Trigger asChild>
+                <Button variant="solid" size="sm">
+                  Operation
+                </Button>
+              </Menu.Trigger>
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content>
+                    {operations.map((operation) => (
+                      <Menu.Item
+                        key={operation.operationName}
+                        value={operation.operationName}
+                        onClick={handleOpenConfirm}
+                      >
+                        {operation.displayName}
+                      </Menu.Item>
+                    ))}
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
+          )}
         </HStack>
         <HStack w="full" justifyContent="space-between" flexWrap="wrap" gap="4">
           <Stack>
