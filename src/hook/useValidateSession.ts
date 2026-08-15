@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import Constant from "../constant/Constant";
+import apiClient from "../util/apiClient";
 
 const useValidateSession = () => {
   const navigate = useNavigate();
@@ -15,10 +15,8 @@ const useValidateSession = () => {
       return;
     }
 
-    axios
-      .post(`${Constant.coreUrl}/session/verify`, {}, {
-        headers: { Authorization: `Bearer ${jwtToken}` },
-      })
+    apiClient
+      .post(`${Constant.coreUrl}/session/verify`, {})
       .then(() => {
         setIsValidated(true);
       })

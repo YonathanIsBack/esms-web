@@ -1,9 +1,9 @@
 import { Button, Heading } from "@chakra-ui/react";
 import { Link } from "react-router";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import ServiceTransactionTable from "./ServiceTransactionTable";
 import Constant from "../constant/Constant";
+import apiClient from "../util/apiClient";
 
 const ServiceTransactionPage = () => {
   const [serviceTransactions, setServiceTransaction] = useState([]);
@@ -12,7 +12,7 @@ const ServiceTransactionPage = () => {
   }, []);
 
   const fetchData = () => {
-    axios.get(`${Constant.coreUrl}/service-transaction`).then((response) => {
+    apiClient.get(`${Constant.coreUrl}/service-transaction`).then((response) => {
       const { data } = response.data;
       setServiceTransaction(data);
     });

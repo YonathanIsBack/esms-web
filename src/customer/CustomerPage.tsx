@@ -1,9 +1,9 @@
 import { Button, Heading } from "@chakra-ui/react";
 import { Link } from "react-router";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomerTable from "./CustomerTable";
 import Constant from "../constant/Constant";
+import apiClient from "../util/apiClient";
 
 const CustomerPage = () => {
   const [customers, setCustomer] = useState([]);
@@ -13,7 +13,7 @@ const CustomerPage = () => {
   }, []);
 
   const fetchData = () => {
-    axios.get(`${Constant.coreUrl}/customer`).then((response) => {
+    apiClient.get(`${Constant.coreUrl}/customer`).then((response) => {
       const { data: customers } = response.data;
       setCustomer(customers);
     });

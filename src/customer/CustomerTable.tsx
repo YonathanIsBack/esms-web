@@ -1,12 +1,12 @@
 import ButtonLink from "../common/ButtonLink";
 import { Button, Stack, Table } from "@chakra-ui/react";
-import axios from "axios";
 import React from "react";
 import Constant from "../constant/Constant";
+import apiClient from "../util/apiClient";
 
 const CustomerTable: React.FC<CustomerListPropType> = ({ customers }) => {
   const deleteUser = (customerId: number) => {
-    axios
+    apiClient
       .delete(`${Constant.coreUrl}/customer/${customerId}`)
       .then((response) => {
         window.location.reload();

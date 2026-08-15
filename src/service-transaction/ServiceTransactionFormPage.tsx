@@ -14,10 +14,10 @@ import {
   useFilter,
   useListCollection,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import apiClient from "../util/apiClient";
 import { useNavigate } from "react-router";
 
 interface FormValues {
@@ -62,7 +62,7 @@ const ServiceTransactionFormPage = () => {
   }, [detailRow]);
 
   const fetchCustomers = () => {
-    axios.get(`${Constant.coreUrl}/customer`).then((response) => {
+    apiClient.get(`${Constant.coreUrl}/customer`).then((response) => {
       const { data: customers } = response.data;
       const comboBoxValues = customers.map(
         (customer: { customerName: string; id: number }) => ({
@@ -76,7 +76,7 @@ const ServiceTransactionFormPage = () => {
   };
 
   const onSubmit = handleSubmit((data) => {
-    axios
+    apiClient
       .post(`${Constant.coreUrl}/service-transaction`, {
         customer_id: data.customerId,
         transaction_date: data.transactionDate,

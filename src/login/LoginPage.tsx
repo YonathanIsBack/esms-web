@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Field, Flex, Input, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import Constant from "../constant/Constant";
 import useValidateSession from "../hook/useValidateSession";
+import apiClient from "../util/apiClient";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     setLoading(true);
-    axios
+    apiClient
       .post(`${Constant.coreUrl}/login`, { username, password })
       .then((response) => {
         const { jwtToken } = response.data.data;

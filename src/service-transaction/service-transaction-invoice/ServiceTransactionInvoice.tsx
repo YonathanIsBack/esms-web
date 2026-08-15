@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import CustomerName from "./CustomerName";
@@ -18,6 +17,7 @@ import TableRows from "./TableRows";
 import TransactionDate from "./TransactionDate";
 import TransactionInformationSection from "./TransactionInformationSection";
 import Constant from "../../constant/Constant";
+import apiClient from "../../util/apiClient";
 
 interface ServiceTransactionInvoicePropType {}
 
@@ -62,7 +62,7 @@ const ServiceTransactionInvoice: React.FC<
   }, []);
 
   const fetchData = () => {
-    axios
+    apiClient
       .get(`${Constant.coreUrl}/service-transaction/` + transactionId)
       .then((response) => {
         const { data } = response.data;

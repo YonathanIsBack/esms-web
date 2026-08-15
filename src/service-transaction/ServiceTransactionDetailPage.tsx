@@ -10,13 +10,13 @@ import {
   Table,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import formatCurrency from "../util/formatCurrency";
 import Constant from "../constant/Constant";
 import { Link } from "react-router";
 import DialogModal from "../common/DialogModal";
+import apiClient from "../util/apiClient";
 
 interface ServiceTransaction {
   customerName: string;
@@ -77,7 +77,7 @@ const ServiceTransactionDetailPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const fetchData = () => {
-    axios
+    apiClient
       .get(`${Constant.coreUrl}/service-transaction/` + transactionId)
       .then((response) => {
         const { data } = response.data;
@@ -102,7 +102,7 @@ const ServiceTransactionDetailPage = () => {
   };
 
   const handleCopyRaw = () => {
-    axios
+    apiClient
       .get(
         `${Constant.coreUrl}/service-transaction/${serviceTransaction.transactionCode}/invoice/plain`
       )
@@ -112,7 +112,7 @@ const ServiceTransactionDetailPage = () => {
   };
 
   const handlePayOperation = () => {
-    axios
+    apiClient
       .post(`${Constant.coreUrl}/service-transaction/operation`, {
         operationName: "pay",
         serviceTransactionCode: transactionId,

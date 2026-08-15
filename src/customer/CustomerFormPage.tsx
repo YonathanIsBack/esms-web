@@ -6,10 +6,10 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams, useSearchParams } from "react-router";
+import apiClient from "../util/apiClient";
 import Constant from "../constant/Constant";
 
 interface FormValues {
@@ -51,7 +51,7 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
       setSearchParams({ action: "VIEW" });
     }
 
-    axios
+    apiClient
       .get(`${Constant.coreUrl}/customer/${customerName}`)
       .then((response) => {
         const { data } = response.data;
@@ -67,7 +67,7 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
 
   const onSubmit = handleSubmit((data) => {
     if(action === "ADD") {
-      axios
+      apiClient
       .post(`${Constant.coreUrl}/customer`, {
         customer_name: data.customerName,
         customer_phone: data.customerPhone,
@@ -83,7 +83,7 @@ const CustomerFormPage: React.FC<CustomerFormPagePropType> = () => {
       return;
     }
 
-    axios
+    apiClient
       .put(`${Constant.coreUrl}/customer/${data.id}`, {
         customer_name: data.customerName,
         customer_phone: data.customerPhone,
