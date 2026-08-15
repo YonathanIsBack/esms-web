@@ -120,6 +120,7 @@ const ServiceTransactionDetailPage = () => {
       .then((response) => {
         const { data } = response;
         setDialogState("success");
+        window.location.reload();
       })
       .catch((exception) => {
         setErrorMessage(exception.response?.data?.message || "");
