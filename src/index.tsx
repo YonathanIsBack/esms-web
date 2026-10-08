@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter
-      basename={process.env.REACT_APP_BASE_PATH ? process.env.REACT_APP_BASE_PATH : "/"}
+      basename={process.env.REACT_APP_BASE_PATH ? process.env.REACT_APP_BASE_PATH : "/esms"}
     >
       <Provider>
         <App />
