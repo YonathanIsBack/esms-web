@@ -2,6 +2,7 @@
   "name": "esms-web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/esms",
   "dependencies": {
     "@chakra-ui/react": "^3.27.0",
     "@emotion/react": "^11.14.0",
