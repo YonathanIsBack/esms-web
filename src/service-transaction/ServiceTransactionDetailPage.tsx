@@ -2,6 +2,7 @@ import {
   Button,
   HStack,
   Heading,
+  SimpleGrid,
   Stack,
   Table,
   Text,
@@ -24,6 +25,7 @@ interface ServiceTransaction {
   transactionDate: string;
   transactionCode: string;
   totalPrice: string;
+  status: string;
   transactionDtls: TransactionDetail[];
 }
 
@@ -39,12 +41,18 @@ interface TransactionDetailResponse {
   price: number;
 }
 
+interface Operation {
+  operationName: string;
+  displayName: string;
+}
+
 const defaultServiceTransaction = {
   customerName: "",
   customerPhone: "",
   transactionDate: "",
   transactionCode: "",
   totalPrice: "",
+  status: "",
   transactionDtls: [],
 };
 
@@ -65,6 +73,8 @@ const ServiceTransactionDetailPage = () => {
   const [copying, setCopying] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [receiptWidth, setReceiptWidth] = useState<80 | 58>(80);
+  const [operations, setOperations] = useState<Operation[]>([]);
+  const [runningOperation, setRunningOperation] = useState("");
   const [statusText, setStatusText] = useState("");
   useEffect(() => {
     fetchData();
@@ -81,6 +91,7 @@ const ServiceTransactionDetailPage = () => {
           customerPhone: data.customer_phone,
           transactionDate: data.transaction_date,
           totalPrice: data.total_price,
+          status: data.status,
           transactionDtls: data.transaction_dtls.map(
             (transaction_dtl: TransactionDetailResponse) => ({
               itemName: transaction_dtl.item_name,
@@ -90,7 +101,31 @@ const ServiceTransactionDetailPage = () => {
           ),
         };
         setServiceTransaction(transaction);
+        fetchOperations(data.transaction_code);
       });
+  };
+
+  const fetchOperations = (transactionCode: string) => {
+    axios
+      .get(`${Constant.coreUrl}/service-transaction/operation/${transactionCode}`)
+      .then((response) => setOperations(response.data.data))
+      .catch(() => setStatusText("Failed to load operations."));
+  };
+
+  const runOperation = (operation: Operation) => {
+    setRunningOperation(operation.operationName);
+    setStatusText("");
+    axios
+      .post(
+        `${Constant.coreUrl}/service-transaction/operation/${serviceTransaction.transactionCode}`,
+        { operationName: operation.operationName }
+      )
+      .then(() => {
+        setStatusText(`${operation.displayName} executed.`);
+        fetchData();
+      })
+      .catch(() => setStatusText(`Failed to execute ${operation.displayName}.`))
+      .finally(() => setRunningOperation(""));
   };
 
   const copyPlainInvoice = () => {
@@ -177,7 +212,7 @@ const ServiceTransactionDetailPage = () => {
         <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
           Transaction Information
         </Heading>
-        <HStack w="full" justifyContent="space-between" flexWrap="wrap" gap="4">
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap="6" maxW="600px">
           <Stack>
             <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Transaction Date</Text>
             <Text fontWeight="medium">{serviceTransaction.transactionDate}</Text>
@@ -190,7 +225,11 @@ const ServiceTransactionDetailPage = () => {
             <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Total Price</Text>
             <Text fontWeight="bold" fontSize="xl" color="var(--color-accent)">{formatCurrency(serviceTransaction.totalPrice)}</Text>
           </Stack>
-        </HStack>
+          <Stack>
+            <Text fontWeight="bold" color="var(--color-text-muted)" fontSize="sm">Status</Text>
+            <Text fontWeight="medium">{serviceTransaction.status}</Text>
+          </Stack>
+        </SimpleGrid>
       </div>
 
       <div className="detail-section">
@@ -249,7 +288,7 @@ const ServiceTransactionDetailPage = () => {
 
       <div className="detail-section">
         <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
-          Operation
+          Invoice
         </Heading>
         <HStack gap="3" flexWrap="wrap">
           <Button
@@ -302,6 +341,34 @@ const ServiceTransactionDetailPage = () => {
           <Text fontSize="sm" color="var(--color-text-muted)">
             {statusText}
           </Text>
+        </HStack>
+      </div>
+
+      <div className="detail-section">
+        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+          Operation
+        </Heading>
+        <HStack gap="3" flexWrap="wrap">
+          {operations.map((operation) => (
+            <Button
+              key={operation.operationName}
+              backgroundColor="var(--color-secondary)"
+              color="white"
+              _hover={{ backgroundColor: "var(--color-primary)" }}
+              border="none"
+              disabled={runningOperation !== ""}
+              onClick={() => runOperation(operation)}
+            >
+              {runningOperation === operation.operationName
+                ? "Processing..."
+                : operation.displayName}
+            </Button>
+          ))}
+          {operations.length === 0 && (
+            <Text fontSize="sm" color="var(--color-text-muted)">
+              No operations available.
+            </Text>
+          )}
         </HStack>
       </div>
     </div>
