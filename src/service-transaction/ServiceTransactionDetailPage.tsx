@@ -1,4 +1,5 @@
 import {
+  Button,
   HStack,
   Heading,
   Stack,
@@ -45,6 +46,8 @@ const ServiceTransactionDetailPage = () => {
   const { transactionId } = useParams();
   const [serviceTransaction, setServiceTransaction] =
     useState<ServiceTransaction>(defaultServiceTransaction);
+  const [copying, setCopying] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
   useEffect(() => {
     fetchData();
   }, []);
@@ -70,6 +73,20 @@ const ServiceTransactionDetailPage = () => {
         };
         setServiceTransaction(transaction);
       });
+  };
+
+  const copyPlainInvoice = () => {
+    setCopying(true);
+    setCopyStatus("");
+    axios
+      .get(
+        `${Constant.coreUrl}/service-transaction/${transactionId}/invoice/plain`,
+        { responseType: "text" }
+      )
+      .then((response) => navigator.clipboard.writeText(response.data))
+      .then(() => setCopyStatus("Invoice copied to clipboard."))
+      .catch(() => setCopyStatus("Failed to copy invoice."))
+      .finally(() => setCopying(false));
   };
 
   return (
@@ -166,6 +183,27 @@ const ServiceTransactionDetailPage = () => {
             ))}
           </Table.Body>
         </Table.Root>
+      </div>
+
+      <div className="detail-section">
+        <Heading fontSize="lg" color="var(--color-secondary)" marginBottom="16px">
+          Operation
+        </Heading>
+        <HStack gap="3" flexWrap="wrap">
+          <Button
+            backgroundColor="var(--color-accent)"
+            color="white"
+            _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+            border="none"
+            disabled={copying}
+            onClick={copyPlainInvoice}
+          >
+            {copying ? "Generating..." : "Copy Invoice (Plain)"}
+          </Button>
+          <Text fontSize="sm" color="var(--color-text-muted)">
+            {copyStatus}
+          </Text>
+        </HStack>
       </div>
     </div>
   );
