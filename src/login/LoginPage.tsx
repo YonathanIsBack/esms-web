@@ -22,6 +22,7 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     setLoading(true);
+    console.log(Constant.coreUrl);
     axios
       .post(`${Constant.coreUrl}/login`, { username, password })
       .then((response) => {
