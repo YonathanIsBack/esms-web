@@ -9,12 +9,14 @@ import {
 import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { useParams } from "react-router";
 import formatCurrency from "../util/formatCurrency";
 import Constant from "../constant/Constant";
 import InvoiceDocument, {
   InvoiceTransactionDto,
 } from "./service-transaction-invoice/InvoiceDocument";
+import InvoiceReceipt from "./service-transaction-invoice/InvoiceReceipt";
 
 interface ServiceTransaction {
   customerName: string;
@@ -46,12 +48,23 @@ const defaultServiceTransaction = {
   transactionDtls: [],
 };
 
+const toInvoiceTransaction = (
+  serviceTransaction: ServiceTransaction
+): InvoiceTransactionDto => ({
+  customerName: serviceTransaction.customerName,
+  customerPhone: serviceTransaction.customerPhone,
+  transactionDate: serviceTransaction.transactionDate,
+  transactionCode: serviceTransaction.transactionCode,
+  transactionDetails: serviceTransaction.transactionDtls,
+});
+
 const ServiceTransactionDetailPage = () => {
   const { transactionId } = useParams();
   const [serviceTransaction, setServiceTransaction] =
     useState<ServiceTransaction>(defaultServiceTransaction);
   const [copying, setCopying] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [receiptWidth, setReceiptWidth] = useState<80 | 58>(80);
   const [statusText, setStatusText] = useState("");
   useEffect(() => {
     fetchData();
@@ -97,38 +110,45 @@ const ServiceTransactionDetailPage = () => {
   const downloadInvoicePdf = () => {
     setDownloading(true);
     setStatusText("");
-    let invoiceCode = "";
-    axios
-      .get(`${Constant.coreUrl}/service-transaction/${transactionId}`)
-      .then((response) => {
-        const { data } = response.data;
-        invoiceCode = data.transaction_code;
-        const transaction: InvoiceTransactionDto = {
-          customerName: data.customer_name,
-          customerPhone: data.customer_phone,
-          transactionDate: data.transaction_date,
-          transactionCode: data.transaction_code,
-          transactionDetails: data.transaction_dtls.map(
-            (transaction_dtl: TransactionDetailResponse) => ({
-              itemName: transaction_dtl.item_name,
-              solution: transaction_dtl.solution,
-              price: transaction_dtl.price,
-            })
-          ),
-        };
-        return pdf(<InvoiceDocument transaction={transaction} />).toBlob();
-      })
+    const transaction = toInvoiceTransaction(serviceTransaction);
+    pdf(<InvoiceDocument transaction={transaction} />)
+      .toBlob()
       .then((blob) => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `invoice-${invoiceCode}.pdf`;
+        link.download = `invoice-${transaction.transactionCode}.pdf`;
         link.click();
         URL.revokeObjectURL(url);
         setStatusText("Invoice PDF downloaded.");
       })
       .catch(() => setStatusText("Failed to download invoice."))
       .finally(() => setDownloading(false));
+  };
+
+  const printReceipt = () => {
+    setStatusText("");
+    const transaction = toInvoiceTransaction(serviceTransaction);
+    const printWindow = window.open(
+      "",
+      "_blank",
+      "width=420,height=640,noopener=no"
+    );
+    if (!printWindow) {
+      setStatusText("Failed to open print window. Allow popups for this site.");
+      return;
+    }
+    const markup = renderToStaticMarkup(
+      <InvoiceReceipt transaction={transaction} widthMm={receiptWidth} />
+    );
+    printWindow.document.write(
+      `<!doctype html><html><head><title>invoice-${transaction.transactionCode}</title></head><body>${markup}</body></html>`
+    );
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+    };
   };
 
   return (
@@ -251,6 +271,33 @@ const ServiceTransactionDetailPage = () => {
             onClick={downloadInvoicePdf}
           >
             {downloading ? "Generating..." : "Download Invoice PDF"}
+          </Button>
+          <select
+            value={receiptWidth}
+            onChange={(event) =>
+              setReceiptWidth(Number(event.target.value) as 80 | 58)
+            }
+            style={{
+              height: "40px",
+              padding: "0 12px",
+              border: "1px solid var(--color-border)",
+              borderRadius: "6px",
+              backgroundColor: "white",
+              color: "var(--color-text)",
+              fontSize: "14px",
+            }}
+          >
+            <option value={80}>80mm</option>
+            <option value={58}>58mm</option>
+          </select>
+          <Button
+            backgroundColor="var(--color-accent)"
+            color="white"
+            _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+            border="none"
+            onClick={printReceipt}
+          >
+            Print Receipt
           </Button>
           <Text fontSize="sm" color="var(--color-text-muted)">
             {statusText}
