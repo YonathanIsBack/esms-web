@@ -7,10 +7,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import formatCurrency from "../util/formatCurrency";
 import Constant from "../constant/Constant";
+import InvoiceDocument, {
+  InvoiceTransactionDto,
+} from "./service-transaction-invoice/InvoiceDocument";
 
 interface ServiceTransaction {
   customerName: string;
@@ -47,7 +51,8 @@ const ServiceTransactionDetailPage = () => {
   const [serviceTransaction, setServiceTransaction] =
     useState<ServiceTransaction>(defaultServiceTransaction);
   const [copying, setCopying] = useState(false);
-  const [copyStatus, setCopyStatus] = useState("");
+  const [downloading, setDownloading] = useState(false);
+  const [statusText, setStatusText] = useState("");
   useEffect(() => {
     fetchData();
   }, []);
@@ -77,16 +82,53 @@ const ServiceTransactionDetailPage = () => {
 
   const copyPlainInvoice = () => {
     setCopying(true);
-    setCopyStatus("");
+    setStatusText("");
     axios
       .get(
         `${Constant.coreUrl}/service-transaction/${transactionId}/invoice/plain`,
         { responseType: "text" }
       )
       .then((response) => navigator.clipboard.writeText(response.data))
-      .then(() => setCopyStatus("Invoice copied to clipboard."))
-      .catch(() => setCopyStatus("Failed to copy invoice."))
+      .then(() => setStatusText("Invoice copied to clipboard."))
+      .catch(() => setStatusText("Failed to copy invoice."))
       .finally(() => setCopying(false));
+  };
+
+  const downloadInvoicePdf = () => {
+    setDownloading(true);
+    setStatusText("");
+    let invoiceCode = "";
+    axios
+      .get(`${Constant.coreUrl}/service-transaction/${transactionId}`)
+      .then((response) => {
+        const { data } = response.data;
+        invoiceCode = data.transaction_code;
+        const transaction: InvoiceTransactionDto = {
+          customerName: data.customer_name,
+          customerPhone: data.customer_phone,
+          transactionDate: data.transaction_date,
+          transactionCode: data.transaction_code,
+          transactionDetails: data.transaction_dtls.map(
+            (transaction_dtl: TransactionDetailResponse) => ({
+              itemName: transaction_dtl.item_name,
+              solution: transaction_dtl.solution,
+              price: transaction_dtl.price,
+            })
+          ),
+        };
+        return pdf(<InvoiceDocument transaction={transaction} />).toBlob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `invoice-${invoiceCode}.pdf`;
+        link.click();
+        URL.revokeObjectURL(url);
+        setStatusText("Invoice PDF downloaded.");
+      })
+      .catch(() => setStatusText("Failed to download invoice."))
+      .finally(() => setDownloading(false));
   };
 
   return (
@@ -200,8 +242,18 @@ const ServiceTransactionDetailPage = () => {
           >
             {copying ? "Generating..." : "Copy Invoice (Plain)"}
           </Button>
+          <Button
+            backgroundColor="var(--color-accent)"
+            color="white"
+            _hover={{ backgroundColor: "var(--color-accent-hover)" }}
+            border="none"
+            disabled={downloading}
+            onClick={downloadInvoicePdf}
+          >
+            {downloading ? "Generating..." : "Download Invoice PDF"}
+          </Button>
           <Text fontSize="sm" color="var(--color-text-muted)">
-            {copyStatus}
+            {statusText}
           </Text>
         </HStack>
       </div>
